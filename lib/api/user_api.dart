@@ -180,7 +180,7 @@ class BookService {
 
     final response = await http.get(
       Uri.parse(
-        "${Endpoint.baseUrlApi}/borrow-history",
+        "${Endpoint.baseUrlApi}/history",
       ), // pastikan endpoint ini benar
       headers: {"Accept": "application/json", "Authorization": "Bearer $token"},
     );
