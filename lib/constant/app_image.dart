@@ -12,7 +12,8 @@ class AppImage {
       "$asset/flower_books_and_cup_transparent.png";
   static const String bookShelf = "$asset/bookshelf.png";
   static const String backGroundGradient = "$asset/backgroundgradient.jpg";
-  static const String logoBackup = "$asset/anotherlogobook.jpg";
+  static const String logoBackup = "$asset/anotherlogobook.png";
+  static const String coverBook = "$asset/coverbook.png";
 
   // static const String anggur = "$asset/anggur.jpeg";
   // static const String pisang = "$asset/pisang.jpeg";

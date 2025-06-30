@@ -21,13 +21,10 @@ class _BookHistoryScreenState extends State<BookHistoryScreen> {
     final token = await PreferenceHandler.getToken();
 
     final response = await http.get(
-      Uri.parse("https://appperpus.mobileprojp.com/api/borrow-history"),
-      headers: {
-        "Accept": "application/json",
-        "Authorization": "Bearer $token",
-      },
+      Uri.parse("https://appperpus.mobileprojp.com/api/history"),
+      headers: {"Accept": "application/json", "Authorization": "Bearer $token"},
     );
-
+    print(response.body);
     if (response.statusCode == 200) {
       final result = json.decode(response.body);
       setState(() {
@@ -54,51 +51,67 @@ class _BookHistoryScreenState extends State<BookHistoryScreen> {
       backgroundColor: AppColor.cream,
       appBar: AppBar(
         backgroundColor: AppColor.softBlueGray,
-        title: Text("Borrow History", style: AppStyle.fontMoreSugarExtra(fontSize: 22, color: Colors.white)),
+        title: Text(
+          "Borrow History",
+          style: AppStyle.fontMoreSugarExtra(fontSize: 22, color: Colors.white),
+        ),
       ),
-      body: isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : histories.isEmpty
+      body:
+          isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : histories.isEmpty
               ? Center(
-                  child: Text(
-                    "No borrow history found.",
-                    style: AppStyle.fontMoreSugarRegular(fontSize: 16),
-                  ),
-                )
-              : ListView.separated(
-                  padding: const EdgeInsets.all(16),
-                  separatorBuilder: (_, __) => const SizedBox(height: 12),
-                  itemCount: histories.length,
-                  itemBuilder: (context, index) {
-                    final item = histories[index];
-                    return Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(12),
-                        boxShadow: [
-                          BoxShadow(color: Colors.grey.withOpacity(0.2), blurRadius: 4, offset: const Offset(0, 2)),
-                        ],
-                      ),
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("Book ID: ${item['book_id'] ?? '-'}",
-                              style: AppStyle.fontMoreSugarRegular(fontSize: 16)),
-                          const SizedBox(height: 4),
-                          Text("User ID: ${item['user_id'] ?? '-'}",
-                              style: AppStyle.fontMoreSugarRegular(fontSize: 16)),
-                          const SizedBox(height: 4),
-                          Text("Borrow Date: ${item['borrow_date'] ?? '-'}",
-                              style: AppStyle.fontMoreSugarRegular(fontSize: 14)),
-                          const SizedBox(height: 4),
-                          Text("Return Date: ${item['return_date'] ?? '-'}",
-                              style: AppStyle.fontMoreSugarRegular(fontSize: 14)),
-                        ],
-                      ),
-                    );
-                  },
+                child: Text(
+                  "No borrow history found.",
+                  style: AppStyle.fontMoreSugarRegular(fontSize: 16),
                 ),
+              )
+              : ListView.separated(
+                padding: const EdgeInsets.all(16),
+                separatorBuilder: (_, __) => const SizedBox(height: 12),
+                itemCount: histories.length,
+                itemBuilder: (context, index) {
+                  final item = histories[index];
+                  return Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.2),
+                          blurRadius: 4,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Book ID: ${item['book_id'] ?? '-'}",
+                          style: AppStyle.fontMoreSugarRegular(fontSize: 16),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          "User ID: ${item['user_id'] ?? '-'}",
+                          style: AppStyle.fontMoreSugarRegular(fontSize: 16),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          "Borrow Date: ${item['borrow_date'] ?? '-'}",
+                          style: AppStyle.fontMoreSugarRegular(fontSize: 14),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          "Return Date: ${item['return_date'] ?? '-'}",
+                          style: AppStyle.fontMoreSugarRegular(fontSize: 14),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
     );
   }
 }

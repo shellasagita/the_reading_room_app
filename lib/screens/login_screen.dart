@@ -79,10 +79,7 @@ class _LoginScreenState extends State<LoginScreen> {
       body: Stack(
         fit: StackFit.expand,
         children: [
-          Image.asset(
-            AppImage.backGroundWithFlower,
-            fit: BoxFit.cover,
-          ),
+          Image.asset(AppImage.backGroundWithFlower, fit: BoxFit.cover),
           SafeArea(
             child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 24.0),
@@ -107,20 +104,27 @@ class _LoginScreenState extends State<LoginScreen> {
                       keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
                         hintText: 'Enter your email',
-                        hintStyle: AppStyle.fontMoreSugarRegular(fontSize: 16)
-                            .copyWith(color: Colors.grey[600]),
-                        prefixIcon: Icon(Icons.email, color: AppColor.softBlueGray),
+                        hintStyle: AppStyle.fontMoreSugarRegular(
+                          fontSize: 16,
+                        ).copyWith(color: Colors.grey[600]),
+                        prefixIcon: Icon(
+                          Icons.email,
+                          color: AppColor.softBlueGray,
+                        ),
                         filled: true,
                         fillColor: AppColor.cream,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide.none,
                         ),
-                        contentPadding:
-                            const EdgeInsets.symmetric(vertical: 16.0, horizontal: 20.0),
+                        contentPadding: const EdgeInsets.symmetric(
+                          vertical: 16.0,
+                          horizontal: 20.0,
+                        ),
                       ),
-                      style: AppStyle.fontMoreSugarRegular(fontSize: 16)
-                          .copyWith(color: AppColor.black),
+                      style: AppStyle.fontMoreSugarRegular(
+                        fontSize: 16,
+                      ).copyWith(color: AppColor.black),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter your email';
@@ -139,12 +143,18 @@ class _LoginScreenState extends State<LoginScreen> {
                       obscureText: !_isPasswordVisible,
                       decoration: InputDecoration(
                         hintText: 'Enter your password',
-                        hintStyle: AppStyle.fontMoreSugarRegular(fontSize: 16)
-                            .copyWith(color: Colors.grey[600]),
-                        prefixIcon: Icon(Icons.lock, color: AppColor.softBlueGray),
+                        hintStyle: AppStyle.fontMoreSugarRegular(
+                          fontSize: 16,
+                        ).copyWith(color: Colors.grey[600]),
+                        prefixIcon: Icon(
+                          Icons.lock,
+                          color: AppColor.softBlueGray,
+                        ),
                         suffixIcon: IconButton(
                           icon: Icon(
-                            _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                            _isPasswordVisible
+                                ? Icons.visibility
+                                : Icons.visibility_off,
                             color: AppColor.softBlueGray,
                           ),
                           onPressed: () {
@@ -159,11 +169,14 @@ class _LoginScreenState extends State<LoginScreen> {
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide.none,
                         ),
-                        contentPadding:
-                            const EdgeInsets.symmetric(vertical: 16.0, horizontal: 20.0),
+                        contentPadding: const EdgeInsets.symmetric(
+                          vertical: 16.0,
+                          horizontal: 20.0,
+                        ),
                       ),
-                      style: AppStyle.fontMoreSugarRegular(fontSize: 16)
-                          .copyWith(color: AppColor.black),
+                      style: AppStyle.fontMoreSugarRegular(
+                        fontSize: 16,
+                      ).copyWith(color: AppColor.black),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter your password';
@@ -184,33 +197,44 @@ class _LoginScreenState extends State<LoginScreen> {
                             borderRadius: BorderRadius.circular(40),
                           ),
                           elevation: 5,
-                          child: _isLoading
-                              ? const CircularProgressIndicator(color: Colors.white)
-                              : Icon(Icons.arrow_forward_ios, color: AppColor.cream, size: 30),
+                          child:
+                              _isLoading
+                                  ? const CircularProgressIndicator(
+                                    color: Colors.white,
+                                  )
+                                  : Icon(
+                                    Icons.arrow_forward_ios,
+                                    color: AppColor.cream,
+                                    size: 30,
+                                  ),
                         ),
                       ),
                     ),
 
-                    const SizedBox(height: 80),
+                    const SizedBox(height: 50),
 
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
                           "Don't have an account? ",
-                          style: AppStyle.fontMoreSugarRegular(fontSize: 16)
-                              .copyWith(color: AppColor.black),
+                          style: AppStyle.fontMoreSugarRegular(
+                            fontSize: 16,
+                          ).copyWith(color: AppColor.black),
                         ),
                         GestureDetector(
                           onTap: () {
                             Navigator.of(context).push(
-                              MaterialPageRoute(builder: (context) => const RegisterScreen()),
+                              MaterialPageRoute(
+                                builder: (context) => const RegisterScreen(),
+                              ),
                             );
                           },
                           child: Text(
                             'Sign up',
-                            style: AppStyle.fontMoreSugarExtra(fontSize: 14)
-                                .copyWith(color: AppColor.softBlueGray),
+                            style: AppStyle.fontMoreSugarExtra(
+                              fontSize: 14,
+                            ).copyWith(color: AppColor.softBlueGray),
                           ),
                         ),
                       ],

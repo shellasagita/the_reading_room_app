@@ -45,9 +45,13 @@ class _HomeScreenState extends State<HomeScreen> {
       backgroundColor: AppColor.cream,
       appBar: AppBar(
         backgroundColor: AppColor.softBlueGray,
+        centerTitle: true,
         title: Text(
           'The Reading Room',
-          style: AppStyle.fontMoreSugarExtra(fontSize: 22, color: Colors.white),
+          style: AppStyle.fontMoreSugarRegular(
+            fontSize: 22,
+            color: Colors.white,
+          ),
         ),
       ),
       drawer: Drawer(
@@ -58,7 +62,9 @@ class _HomeScreenState extends State<HomeScreen> {
             DrawerHeader(
               decoration: const BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage('assets/images/background_flower.png'),
+                  image: AssetImage(
+                    'assets/images/backgroundwithoutflower.png',
+                  ),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -72,29 +78,64 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    'Hi, \${userName ??"User"}!',
-                    style: AppStyle.fontMoreSugarRegular(fontSize: 18, color: Colors.white),
+                    "Hi, ${userName ?? 'User'}!",
+                    style: AppStyle.fontMoreSugarRegular(
+                      fontSize: 18,
+                      color: AppColor.black,
+                    ),
                   ),
                 ],
               ),
             ),
-            _buildDrawerItem(context, Icons.person, 'Profile', AppRoutes.profile),
-            _buildDrawerItem(context, Icons.menu_book, 'Book List', AppRoutes.bookList),
-            _buildDrawerItem(context, Icons.book_online, 'Borrow Book', AppRoutes.borrowBook),
-            _buildDrawerItem(context, Icons.assignment_return, 'Return Book', AppRoutes.returnBook),
-            _buildDrawerItem(context, Icons.history, 'Borrow History', AppRoutes.bookHistory),
-            _buildDrawerItem(context, Icons.add_box, 'Add Book', AppRoutes.addBook),
-            _buildDrawerItem(context, Icons.delete, 'Delete Book', AppRoutes.deleteBook),
+            _buildDrawerItem(
+              context,
+              Icons.person,
+              'Profile',
+              AppRoutes.profile,
+            ),
+            _buildDrawerItem(
+              context,
+              Icons.menu_book,
+              'Book List',
+              AppRoutes.bookList,
+            ),
+            _buildDrawerItem(
+              context,
+              Icons.book_outlined,
+              'Borrow Book',
+              AppRoutes.borrowBook,
+            ),
+            // _buildDrawerItem(
+            //   context,
+            //   Icons.assignment_return,
+            //   'Return Book',
+            //   AppRoutes.returnBook,
+            // ),
+            _buildDrawerItem(
+              context,
+              Icons.history,
+              'Borrow History',
+              AppRoutes.bookHistory,
+            ),
+            _buildDrawerItem(
+              context,
+              Icons.add_box,
+              'Add Book',
+              AppRoutes.addBook,
+            ),
+            _buildDrawerItem(
+              context,
+              Icons.delete,
+              'Delete Book',
+              AppRoutes.deleteBook,
+            ),
           ],
         ),
       ),
       body: Stack(
         children: [
           Positioned.fill(
-            child: Image.asset(
-              AppImage.backGroundGradient,
-              fit: BoxFit.cover,
-            ),
+            child: Image.asset(AppImage.backGroundGradient, fit: BoxFit.cover),
           ),
           Center(
             child: Text(
@@ -107,7 +148,12 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  ListTile _buildDrawerItem(BuildContext context, IconData icon, String label, String route) {
+  ListTile _buildDrawerItem(
+    BuildContext context,
+    IconData icon,
+    String label,
+    String route,
+  ) {
     return ListTile(
       leading: Icon(icon, color: AppColor.mossGreen),
       title: Text(label, style: AppStyle.fontMoreSugarRegular(fontSize: 16)),
