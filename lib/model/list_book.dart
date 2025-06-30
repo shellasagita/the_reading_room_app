@@ -10,7 +10,7 @@ String listBookToJson(ListBook data) => json.encode(data.toJson());
 
 class ListBook {
   String? message;
-  List<Datum>? data;
+  List<Book>? data;
 
   ListBook({this.message, this.data});
 
@@ -19,7 +19,7 @@ class ListBook {
     data:
         json["data"] == null
             ? []
-            : List<Datum>.from(json["data"]!.map((x) => Datum.fromJson(x))),
+            : List<Book>.from(json["data"]!.map((x) => Book.fromJson(x))),
   );
 
   Map<String, dynamic> toJson() => {
@@ -29,7 +29,7 @@ class ListBook {
   };
 }
 
-class Datum {
+class Book {
   int? id;
   String? title;
   String? author;
@@ -37,7 +37,7 @@ class Datum {
   DateTime? createdAt;
   DateTime? updatedAt;
 
-  Datum({
+  Book({
     this.id,
     this.title,
     this.author,
@@ -46,7 +46,7 @@ class Datum {
     this.updatedAt,
   });
 
-  factory Datum.fromJson(Map<String, dynamic> json) => Datum(
+  factory Book.fromJson(Map<String, dynamic> json) => Book(
     id: json["id"],
     title: json["title"],
     author: json["author"],

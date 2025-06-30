@@ -3,7 +3,6 @@ import 'package:the_reading_room_app/constant/app_color.dart';
 import 'package:the_reading_room_app/constant/app_image.dart';
 import 'package:the_reading_room_app/constant/app_style.dart';
 import 'package:the_reading_room_app/helper/preference.dart';
-import 'package:the_reading_room_app/routes/app_routes.dart';
 import 'package:the_reading_room_app/screens/intro_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -45,7 +44,7 @@ class _SplashScreenState extends State<SplashScreen> {
       width: double.infinity,
       decoration: const BoxDecoration(
         image: DecorationImage(
-          image: AssetImage(AppImage.backGroundWithoutFlower),
+          image: AssetImage(AppImage.backGroundSunset),
           fit: BoxFit.cover,
         ),
       ),
@@ -64,11 +63,25 @@ class _SplashScreenState extends State<SplashScreen> {
         children: [
           Spacer(),
           // SizedBox(height: 20),
-          Text(
-            "The Reading Room",
-            style: AppStyle.fontMoreSugarRegular(
-              fontSize: 32,
-              color: AppColor.black,
+          Container(
+             decoration: BoxDecoration(
+              color: AppColor.cream,
+              borderRadius: BorderRadius.circular(900.0),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1), // Subtle shadow color
+                  spreadRadius: 9, // How far the shadow spreads
+                  blurRadius: 7, // How blurry the shadow is
+                  offset: const Offset(0, 9), // Changes position of shadow
+                ),
+              ],
+            ),
+            child: Text(
+              "The Reading Room",
+              style: AppStyle.fontMoreSugarRegular(
+                fontSize: 32,
+                color: AppColor.black,
+              ),
             ),
           ),
           SizedBox(height: 30),
@@ -79,7 +92,7 @@ class _SplashScreenState extends State<SplashScreen> {
               borderRadius: BorderRadius.circular(400.0),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1), // Subtle shadow color
+                  color: Colors.black.withOpacity(0.9), // Subtle shadow color
                   spreadRadius: 2, // How far the shadow spreads
                   blurRadius: 7, // How blurry the shadow is
                   offset: const Offset(0, 3), // Changes position of shadow

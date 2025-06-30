@@ -11,4 +11,5 @@ class AppColor {
   static const Color sageGreenAlt = Color(0xFF99A799); // #99A799
   static const Color creamyBeige = Color(0xFFF2DDC1); // #F2DDC1
   static const Color blushPink = Color(0xFFE2C2B9); // #E2C2B9
+  
 }

@@ -3,7 +3,6 @@ import 'package:the_reading_room_app/constant/app_color.dart';
 import 'package:the_reading_room_app/constant/app_image.dart';
 import 'package:the_reading_room_app/constant/app_style.dart';
 import 'package:the_reading_room_app/routes/app_routes.dart';
-import 'package:the_reading_room_app/screens/login_screen.dart';
 
 class IntroScreenGetStarted extends StatefulWidget {
   const IntroScreenGetStarted({super.key});
