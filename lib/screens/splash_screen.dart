@@ -44,7 +44,7 @@ class _SplashScreenState extends State<SplashScreen> {
       width: double.infinity,
       decoration: const BoxDecoration(
         image: DecorationImage(
-          image: AssetImage(AppImage.backGroundSunset),
+          image: AssetImage(AppImage.backgroundMountain),
           fit: BoxFit.cover,
         ),
       ),
@@ -62,45 +62,47 @@ class _SplashScreenState extends State<SplashScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Spacer(),
-          // SizedBox(height: 20),
-          Container(
-             decoration: BoxDecoration(
-              color: AppColor.cream,
-              borderRadius: BorderRadius.circular(900.0),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.1), // Subtle shadow color
-                  spreadRadius: 9, // How far the shadow spreads
-                  blurRadius: 7, // How blurry the shadow is
-                  offset: const Offset(0, 9), // Changes position of shadow
-                ),
-              ],
-            ),
-            child: Text(
+          SizedBox(height: 160),
+          // Container(
+          //    decoration: BoxDecoration(
+          //     color: AppColor.cream,
+          //     // borderRadius: BorderRadius.circular(900.0),
+          //     boxShadow: [
+          //       BoxShadow(
+          //         color: Colors.black.withOpacity(0.1), // Subtle shadow color
+          //         spreadRadius: 1, // How far the shadow spreads
+          //         blurRadius: 1, // How blurry the shadow is
+          //         offset: const Offset(0, 9), // Changes position of shadow
+          //       ),
+          //     ],
+          //   ),
+            // child: 
+            Text(
               "The Reading Room",
               style: AppStyle.fontMoreSugarRegular(
-                fontSize: 32,
+                fontSize: 36,
                 color: AppColor.black,
               ),
             ),
-          ),
-          SizedBox(height: 30),
-          Container(
-            // color: AppColor.cream,
-            decoration: BoxDecoration(
-              color: AppColor.cream,
-              borderRadius: BorderRadius.circular(400.0),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.9), // Subtle shadow color
-                  spreadRadius: 2, // How far the shadow spreads
-                  blurRadius: 7, // How blurry the shadow is
-                  offset: const Offset(0, 3), // Changes position of shadow
-                ),
-              ],
-            ),
-            child: Image.asset(AppImage.logoFront, height: 200),
-          ),
+          // ),
+          // SizedBox(height: 30),
+          // Container(
+          //   // color: AppColor.cream,
+          //   decoration: BoxDecoration(
+          //     color: AppColor.cream,
+          //     borderRadius: BorderRadius.circular(400.0),
+          //     boxShadow: [
+          //       BoxShadow(
+          //         color: Colors.black.withOpacity(0.9), // Subtle shadow color
+          //         spreadRadius: 2, // How far the shadow spreads
+          //         blurRadius: 7, // How blurry the shadow is
+          //         offset: const Offset(0, 3), // Changes position of shadow
+          //       ),
+          //     ],
+          //   ),
+            // child: 
+            Image.asset(AppImage.logoBackup, width: 1200,),
+          // ),
 
           Spacer(),
           SafeArea(

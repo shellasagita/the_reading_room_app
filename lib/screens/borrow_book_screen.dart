@@ -18,26 +18,29 @@ class BorrowBookScreen extends StatefulWidget {
 class _BorrowBookScreenState extends State<BorrowBookScreen> {
   final BookService _bookService = BookService();
   List<Data> _borrowedBooks = [];
+  Map<int, Book> _bookMap = {}; // Map untuk bookId ke detail buku
   bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _loadBorrowedBooks();
+    _loadAllData();
   }
 
-  Future<void> _loadBorrowedBooks() async {
+  Future<void> _loadAllData() async {
     try {
-      final data = await _bookService.fetchBookHistory();
+      final books = await _bookService.getBooks();
+      final bookMap = {for (var book in books) if (book.id != null) book.id!: book};
+
+      final borrowData = await _bookService.fetchBookHistory();
       setState(() {
-        _borrowedBooks = data.cast<Data>();
+        _bookMap = bookMap;
+        _borrowedBooks = borrowData.cast<Data>();
         _isLoading = false;
       });
     } catch (e) {
-      print("Error loading borrowed books: $e");
-      setState(() {
-        _isLoading = false;
-      });
+      debugPrint("Error: $e");
+      setState(() => _isLoading = false);
     }
   }
 
@@ -47,76 +50,65 @@ class _BorrowBookScreenState extends State<BorrowBookScreen> {
   }
 
   void _showBookDialog(Data data) {
+    final book = _bookMap[data.bookId];
     final daysLeft = _daysLeft(data.borrowDate!);
+    final borrowDateStr = DateFormat('dd MMM yyyy').format(data.borrowDate!);
+
     showDialog(
       context: context,
-      builder:
-          (_) => AlertDialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
-            ),
-            title: Text(
-              '${data.bookId}',
-              style: AppStyle.fontMoreSugarExtra(fontSize: 20),
-            ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Borrowed on: ${DateFormat('dd MMM yyyy').format(data.borrowDate!)}",
-                ),
-                Text("Days left: $daysLeft days"),
-                const SizedBox(height: 16),
-                Row(
-                  children: [
-                    Icon(Icons.menu_book, color: AppColor.softBlueGray),
-                    const SizedBox(width: 8),
-                    Text(
-                      "Read Book",
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                GestureDetector(
-                  onTap: () async {
-                    Navigator.of(context).pop();
-                    await _returnBook(data.bookId!);
-                  },
-                  child: Row(
-                    children: [
-                      Icon(Icons.assignment_return, color: AppColor.mossGreen),
-                      const SizedBox(width: 8),
-                      Text(
-                        "Return Book",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
-                ),
+      builder: (_) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Text(
+          book != null ? book.title ?? "Untitled" : 'Book ID: ${data.bookId}',
+          style: AppStyle.fontMoreSugarExtra(fontSize: 20),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("Author: ${book?.author ?? 'Unknown'}"),
+            Text("Borrowed on: $borrowDateStr"),
+            Text("Days left: $daysLeft days"),
+            const SizedBox(height: 16),
+            Row(
+              children: const [
+                Icon(Icons.menu_book, color: AppColor.softBlueGray),
+                SizedBox(width: 8),
+                Text("Read Book", style: TextStyle(fontWeight: FontWeight.bold)),
               ],
             ),
-          ),
+            const SizedBox(height: 12),
+            GestureDetector(
+              onTap: () async {
+                Navigator.of(context).pop();
+                await _returnBook(data.bookId!);
+              },
+              child: Row(
+                children: const [
+                  Icon(Icons.assignment_return, color: AppColor.mossGreen),
+                  SizedBox(width: 8),
+                  Text("Return Book", style: TextStyle(fontWeight: FontWeight.bold)),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
   Future<void> _returnBook(int bookId) async {
     try {
       await _bookService.returnBookAction(bookId: bookId);
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Book returned"),
-          backgroundColor: Colors.green,
-        ),
+        const SnackBar(content: Text("Book returned"), backgroundColor: Colors.green),
       );
-      _loadBorrowedBooks();
+      _loadAllData();
     } catch (e) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Failed to return"),
-          backgroundColor: Colors.red,
-        ),
+        const SnackBar(content: Text("Failed to return"), backgroundColor: Colors.red),
       );
     }
   }
@@ -126,10 +118,7 @@ class _BorrowBookScreenState extends State<BorrowBookScreen> {
     return Scaffold(
       backgroundColor: AppColor.cream,
       appBar: AppBar(
-        title: Text(
-          "Borrowed Books",
-          style: AppStyle.fontMoreSugarExtra(fontSize: 22, color: Colors.white),
-        ),
+        title: Text("Borrowed Books", style: AppStyle.fontMoreSugarExtra(fontSize: 22, color: Colors.white)),
         backgroundColor: AppColor.softBlueGray,
       ),
       body: Stack(
@@ -140,52 +129,45 @@ class _BorrowBookScreenState extends State<BorrowBookScreen> {
           _isLoading
               ? const Center(child: CircularProgressIndicator())
               : GridView.builder(
-                padding: const EdgeInsets.all(16),
-                itemCount: _borrowedBooks.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  mainAxisSpacing: 20,
-                  crossAxisSpacing: 20,
-                  childAspectRatio: 0.7,
-                ),
-                itemBuilder: (context, index) {
-                  final book = _borrowedBooks[index];
-                  return GestureDetector(
-                    onTap: () => _showBookDialog(book),
-                    child: Column(
-                      children: [
-                        Expanded(
-                          child: Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              Image.asset(
-                                AppImage.coverBook,
-                                fit: BoxFit.contain,
-                              ),
-                              Positioned(
-                                bottom: 10,
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 4,
-                                  ),
-                                  child: Text(
-                                    'Book ID: ${book.bookId}',
-                                    style: AppStyle.fontMoreSugarRegular(
-                                      fontSize: 12,
-                                      color: Colors.black87,
+                  padding: const EdgeInsets.all(16),
+                  itemCount: _borrowedBooks.length,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    mainAxisSpacing: 20,
+                    crossAxisSpacing: 20,
+                    childAspectRatio: 0.7,
+                  ),
+                  itemBuilder: (context, index) {
+                    final bookData = _borrowedBooks[index];
+                    final book = _bookMap[bookData.bookId];
+                    return GestureDetector(
+                      onTap: () => _showBookDialog(bookData),
+                      child: Column(
+                        children: [
+                          Expanded(
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                Image.asset(AppImage.coverBook, fit: BoxFit.contain),
+                                Positioned(
+                                  bottom: 10,
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                                    child: Text(
+                                      book?.title ?? 'Book ID: ${bookData.bookId}',
+                                      style: AppStyle.fontMoreSugarRegular(fontSize: 12, color: Colors.black87),
+                                      textAlign: TextAlign.center,
                                     ),
-                                    textAlign: TextAlign.center,
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
         ],
       ),
     );

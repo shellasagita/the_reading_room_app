@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:the_reading_room_app/endpoint.dart';
 import 'package:the_reading_room_app/helper/preference.dart';
 import 'package:the_reading_room_app/model/add_book.dart';
-import 'package:the_reading_room_app/model/borrow_book.dart';
+import 'package:the_reading_room_app/model/borrow_book.dart' ;
 import 'package:the_reading_room_app/model/list_book.dart';
 import 'package:the_reading_room_app/model/list_books_history.dart';
 import 'package:the_reading_room_app/model/login_response.dart';
@@ -151,7 +151,7 @@ class BookService {
 
     print("Borrow response: ${response.body}");
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 200 || response.statusCode == 201) {
       return borrowBookFromJson(response.body);
     } else {
       throw Exception("Failed to borrow book: ${response.body}");

@@ -7,6 +7,8 @@ class AppImage {
       "$asset/background_without_flower.png";
   static const String backGroundSunset = "$asset/backgroundsunset.png";
   static const String backGroundSky = "$asset/backgroundsky.png";
+  static const String backgroundMountain = "$asset/mountain.png";
+
 
   static const String logoSplash =
       "$asset/flower_books_and_cup_transparent.png";

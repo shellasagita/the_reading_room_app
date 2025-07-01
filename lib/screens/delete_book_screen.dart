@@ -74,8 +74,8 @@ class _DeleteBookScreenState extends State<DeleteBookScreen> {
                       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                       color: Colors.white,
                       child: ListTile(
-                        title: Text(book.title ?? "No title"),
-                        subtitle: Text("Author: ${book.author ?? "-"}"),
+                        title: Text(book.title ?? "No title", style: AppStyle.fontMoreSugarRegular(fontSize: 14, color: Colors.black)),
+                        subtitle: Text("Author: ${book.author ?? "-"}", style: AppStyle.fontMoreSugarRegular(fontSize: 12, color: Colors.black)),
                         trailing: IconButton(
                           icon: Icon(Icons.delete, color: Colors.red),
                           onPressed: () => _showConfirmDialog(book),
