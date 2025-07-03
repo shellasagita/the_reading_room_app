@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:the_reading_room_app/constant/app_color.dart';
 import 'package:the_reading_room_app/constant/app_style.dart';
-import 'package:the_reading_room_app/helper/preference.dart';
 import 'package:the_reading_room_app/endpoint.dart';
-import 'package:http/http.dart' as http;
+import 'package:the_reading_room_app/helper/preference.dart';
 
 class AddBookScreen extends StatefulWidget {
   static const String id = "/add_book";
@@ -28,10 +28,7 @@ class _AddBookScreenState extends State<AddBookScreen> {
 
     final response = await http.post(
       Uri.parse("${Endpoint.baseUrlApi}/books"),
-      headers: {
-        "Accept": "application/json",
-        "Authorization": "Bearer $token",
-      },
+      headers: {"Accept": "application/json", "Authorization": "Bearer $token"},
       body: {
         "title": _titleController.text,
         "author": _authorController.text,
@@ -43,7 +40,13 @@ class _AddBookScreenState extends State<AddBookScreen> {
     if (response.statusCode == 200) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text("Book added successfully", style: AppStyle.fontMoreSugarRegular(fontSize: 14, color: Colors.white)),
+          content: Text(
+            "Book added successfully",
+            style: AppStyle.fontMoreSugarRegular(
+              fontSize: 14,
+              color: Colors.white,
+            ),
+          ),
           backgroundColor: Colors.green,
         ),
       );
@@ -53,7 +56,13 @@ class _AddBookScreenState extends State<AddBookScreen> {
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text("Failed to add book", style: AppStyle.fontMoreSugarRegular(fontSize: 14, color: Colors.white)),
+          content: Text(
+            "Failed to add book",
+            style: AppStyle.fontMoreSugarRegular(
+              fontSize: 14,
+              color: Colors.white,
+            ),
+          ),
           backgroundColor: Colors.red,
         ),
       );
@@ -74,7 +83,10 @@ class _AddBookScreenState extends State<AddBookScreen> {
         validator: validator,
         decoration: InputDecoration(
           labelText: label,
-          labelStyle: AppStyle.fontMoreSugarRegular(fontSize: 16, color: Colors.grey[800]),
+          labelStyle: AppStyle.fontMoreSugarRegular(
+            fontSize: 16,
+            color: Colors.grey[800],
+          ),
           filled: true,
           fillColor: AppColor.cream,
           border: OutlineInputBorder(
@@ -82,7 +94,10 @@ class _AddBookScreenState extends State<AddBookScreen> {
             borderSide: BorderSide.none,
           ),
         ),
-        style: AppStyle.fontMoreSugarRegular(fontSize: 16, color: AppColor.black),
+        style: AppStyle.fontMoreSugarRegular(
+          fontSize: 16,
+          color: AppColor.black,
+        ),
       ),
     );
   }
@@ -92,7 +107,10 @@ class _AddBookScreenState extends State<AddBookScreen> {
     return Scaffold(
       backgroundColor: AppColor.cream,
       appBar: AppBar(
-        title: Text("Add New Book", style: AppStyle.fontMoreSugarExtra(fontSize: 20, color: Colors.white)),
+        title: Text(
+          "Add New Book",
+          style: AppStyle.fontMoreSugarExtra(fontSize: 20, color: Colors.white),
+        ),
         backgroundColor: AppColor.softBlueGray,
       ),
       body: Padding(
@@ -104,36 +122,45 @@ class _AddBookScreenState extends State<AddBookScreen> {
               _buildTextField(
                 controller: _titleController,
                 label: "Title",
-                validator: (value) => value!.isEmpty ? "Please enter title" : null,
+                validator:
+                    (value) => value!.isEmpty ? "Please enter title" : null,
               ),
               _buildTextField(
                 controller: _authorController,
                 label: "Author",
-                validator: (value) => value!.isEmpty ? "Please enter author" : null,
+                validator:
+                    (value) => value!.isEmpty ? "Please enter author" : null,
               ),
               _buildTextField(
                 controller: _stockController,
                 label: "Stock",
                 keyboardType: TextInputType.number,
-                validator: (value) => value!.isEmpty ? "Please enter stock" : null,
+                validator:
+                    (value) => value!.isEmpty ? "Please enter stock" : null,
               ),
               const SizedBox(height: 24),
               SizedBox(
                 width: double.infinity,
-                child: _isLoading
-                    ? const Center(child: CircularProgressIndicator())
-                    : ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColor.mossGreen,
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                child:
+                    _isLoading
+                        ? const Center(child: CircularProgressIndicator())
+                        : ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColor.mossGreen,
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          onPressed: _submitBook,
+                          child: Text(
+                            "Add Book",
+                            style: AppStyle.fontMoreSugarExtra(
+                              fontSize: 18,
+                              color: Colors.white,
+                            ),
+                          ),
                         ),
-                        onPressed: _submitBook,
-                        child: Text(
-                          "Add Book",
-                          style: AppStyle.fontMoreSugarExtra(fontSize: 18, color: Colors.white),
-                        ),
-                      ),
               ),
             ],
           ),

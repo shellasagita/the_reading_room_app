@@ -3,14 +3,14 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:the_reading_room_app/endpoint.dart';
 import 'package:the_reading_room_app/helper/preference.dart';
-import 'package:the_reading_room_app/model/add_book.dart';
-import 'package:the_reading_room_app/model/borrow_book.dart' ;
+import 'package:the_reading_room_app/model/add_book.dart' hide Data;
+import 'package:the_reading_room_app/model/borrow_book.dart';
+import 'package:the_reading_room_app/model/delete_book.dart';
 import 'package:the_reading_room_app/model/list_book.dart';
 import 'package:the_reading_room_app/model/list_books_history.dart';
-import 'package:the_reading_room_app/model/login_response.dart';
+import 'package:the_reading_room_app/model/login_response.dart' hide Data;
 import 'package:the_reading_room_app/model/register_error_response';
-import 'package:the_reading_room_app/model/register_response.dart';
-import 'package:the_reading_room_app/model/delete_book.dart';
+import 'package:the_reading_room_app/model/register_response.dart' hide Data;
 
 class UserService {
   Future<Map<String, dynamic>> registerUser({
@@ -149,19 +149,23 @@ class BookService {
       body: {"book_id": bookId.toString()},
     );
 
-    print("Borrow response: ${response.body}");
+    print("Borrow response: ${response.statusCode}");
+    print("Borrow body: ${response.body}");
 
+    // Cek manual apakah status code-nya tetap berhasil (200)
     if (response.statusCode == 200 || response.statusCode == 201) {
       return borrowBookFromJson(response.body);
     } else {
-      throw Exception("Failed to borrow book: ${response.body}");
+      // Tetap parse JSON jika mengandung pesan error
+      final parsed = jsonDecode(response.body);
+      throw Exception(parsed['message'] ?? 'Failed to borrow book');
     }
   }
 
   Future<Map<String, dynamic>> returnBookAction({required int bookId}) async {
     final token = await PreferenceHandler.getToken();
 
-    final response = await http.post(
+    final response = await http.put(
       Uri.parse("${Endpoint.returnBook}/$bookId"), // tambahkan /$bookId
       headers: {"Accept": "application/json", "Authorization": "Bearer $token"},
     );
@@ -175,7 +179,7 @@ class BookService {
     }
   }
 
-  Future<List<dynamic>> fetchBookHistory() async {
+  Future<List<Data>> fetchBookHistory() async {
     final token = await PreferenceHandler.getToken();
 
     final response = await http.get(
@@ -189,7 +193,31 @@ class BookService {
 
     if (response.statusCode == 200) {
       final data = listBooksHistoryFromJson(response.body);
-      return data.data ?? [];
+      List<Data> listData = [];
+
+      for (int i = 0; i < data.data!.length; i++) {
+        listData.add(
+          Data(
+            userId: int.parse(data.data![i]["user_id"]),
+            bookId: int.parse(data.data![i]["book_id"]),
+            borrowDate:
+                data.data![i]["borrow_date"] == null
+                    ? null
+                    : DateTime.parse(data.data![i]["borrow_date"]),
+            updatedAt:
+                data.data![i]["updated_at"] == null
+                    ? null
+                    : DateTime.parse(data.data![i]["updated_at"]),
+            createdAt:
+                data.data![i]["created_at"] == null
+                    ? null
+                    : DateTime.parse(data.data![i]["created_at"]),
+            id: data.data![i]["id"],
+          ),
+        );
+      }
+      print(listData);
+      return listData;
     } else {
       throw Exception('Failed to fetch book history');
     }
@@ -204,7 +232,7 @@ class BookService {
     final token = await PreferenceHandler.getToken();
 
     final response = await http.post(
-      Uri.parse("${Endpoint.bookList}"), // /api/books
+      Uri.parse(Endpoint.bookList), // /api/books
       headers: {"Accept": "application/json", "Authorization": "Bearer $token"},
       body: {"title": title, "author": author, "stock": stock.toString()},
     );

@@ -1,7 +1,4 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:the_reading_room_app/api/user_api.dart';
 import 'package:the_reading_room_app/constant/app_color.dart';
 import 'package:the_reading_room_app/constant/app_style.dart';
@@ -19,6 +16,7 @@ class _BookListScreenState extends State<BookListScreen> {
   final BookService _bookService = BookService();
   List<Book> _books = [];
   bool _isLoading = true;
+  List<int> _borrowedBookIds = [];
 
   @override
   void initState() {
@@ -29,8 +27,11 @@ class _BookListScreenState extends State<BookListScreen> {
   Future<void> _loadBooks() async {
     try {
       final books = await _bookService.getBooks();
+      final borrowed = await _bookService.fetchBookHistory();
+
       setState(() {
         _books = books;
+        _borrowedBookIds = borrowed.map((e) => e.bookId!).toList();
         _isLoading = false;
       });
     } catch (e) {
@@ -42,9 +43,26 @@ class _BookListScreenState extends State<BookListScreen> {
   }
 
   Future<void> _confirmAndBorrowBook(Book book) async {
+    if (_borrowedBookIds.contains(book.id)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("You already borrowed this book."),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
     int stock = int.tryParse(book.stock ?? "0") ?? 0;
     if (stock == 0) return;
-
+    if (_borrowedBookIds.contains(book.id)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("You already borrowed this book."),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
     final shouldBorrow = await showDialog<bool>(
       context: context,
       builder:
@@ -79,7 +97,6 @@ class _BookListScreenState extends State<BookListScreen> {
     if (shouldBorrow == true) {
       try {
         final response = await _bookService.borrowBook(book.id!);
-
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(response.message ?? "Book borrowed successfully."),
@@ -87,37 +104,37 @@ class _BookListScreenState extends State<BookListScreen> {
           ),
         );
 
-        setState(() {
-          book.stock = (stock - 1).toString();
-        });
+        await _loadBooks();
 
-        await _saveBorrowedBook(book);
+        // await _saveBorrowe
+        // dBook(book);
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Failed to borrow book."),
+          SnackBar(
+            content: Text(e.toString().replaceAll('Exception:', '').trim()),
             backgroundColor: Colors.red,
           ),
         );
       }
+      await _loadBooks();
     }
   }
 
-  Future<void> _saveBorrowedBook(Book book) async {
-    final prefs = await SharedPreferences.getInstance();
-    final key = 'borrowed_books';
-    final List<String> borrowedBooksJson = prefs.getStringList(key) ?? [];
+  // Future<void> _saveBorrowedBook(Book book) async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   final key = 'borrowed_books';
+  //   final List<String> borrowedBooksJson = prefs.getStringList(key) ?? [];
 
-    bool alreadyAdded = borrowedBooksJson.any((jsonStr) {
-      final map = json.decode(jsonStr);
-      return map['id'] == book.id;
-    });
+  //   bool alreadyAdded = borrowedBooksJson.any((jsonStr) {
+  //     final map = json.decode(jsonStr);
+  //     return map['id'] == book.id;
+  //   });
 
-    if (!alreadyAdded) {
-      borrowedBooksJson.add(json.encode(book.toJson()));
-      await prefs.setStringList(key, borrowedBooksJson);
-    }
-  }
+  //   if (!alreadyAdded) {
+  //     borrowedBooksJson.add(json.encode(book.toJson()));
+  //     await prefs.setStringList(key, borrowedBooksJson);
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {

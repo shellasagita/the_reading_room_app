@@ -42,7 +42,7 @@ class Data {
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
     userId: json["user_id"],
-    bookId: json["book_id"],
+    bookId: int.parse(json["book_id"]),
     borrowDate:
         json["borrow_date"] == null
             ? null
