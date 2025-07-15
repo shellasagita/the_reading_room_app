@@ -1,4 +1,4 @@
-package com.example.the_reading_room_app
+package com.shella.readroom
 
 import io.flutter.embedding.android.FlutterActivity
 
